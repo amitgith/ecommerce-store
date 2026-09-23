@@ -1,13 +1,16 @@
 import { Router } from "express";
 import {
-  apiController,
+  loginApiController,
+  refreshTokenApiController,
   registerApiController,
 } from "../controllers/auth.controller.js";
-import { registerValidator } from "../validators/auth.validator.js";
-
+import {
+  loginValidator,
+  registerValidator,
+} from "../validators/auth.validator.js";
 const router = Router();
-
-router.get("/", apiController);
 // Create a new user account
 router.post("/register", registerValidator, registerApiController);
+router.post("/login", loginValidator, loginApiController);
+router.post("/refresh-token", refreshTokenApiController);
 export default router;
