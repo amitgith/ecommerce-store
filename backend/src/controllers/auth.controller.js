@@ -23,8 +23,8 @@ export const registerApiController = async (req, res) => {
       email,
       passwordHash: await bcrypt.hash(password, 10),
     });
-    const userResponse = user.toObject();
-    delete userResponse.passwordHash;
+    // const userResponse = user.toObject();
+    // delete userResponse.passwordHash;
     const { accessToken, refreshToken } = generateTokens({
       userId: user._id,
       role: user.role,
@@ -38,8 +38,13 @@ export const registerApiController = async (req, res) => {
     res.status(201).json({
       message: "user registered successfully",
       data: {
-        user: userResponse,
+        user: {
+          name: user.name,
+          email: user.email,
+          id: user._id,
+        },
       },
+      accessToken,
     });
   } catch (error) {
     console.log(error.message);
@@ -88,6 +93,7 @@ export const loginApiController = async (req, res) => {
           name: user.name,
         },
       },
+      accessToken,
     });
   } catch (error) {
     console.log(error.message);
@@ -107,7 +113,7 @@ export const refreshTokenApiController = async (req, res) => {
     const decoded = verifyRefreshToken(refreshToken);
     const { userId, role } = decoded;
     const user = await userModel.findById(userId);
-    if (refreshToken !== user.refreshToken) {
+    if (refreshToken != user.refreshToken) {
       await userModel.findByIdAndUpdate(user._id, {
         refreshToken: null,
       });
@@ -115,7 +121,8 @@ export const refreshTokenApiController = async (req, res) => {
         message: "Refresh Token mismatch",
       });
     }
-    const { accessToken, newRefreshToken } = generateTokens({ userId, role });
+    const accessToken = generateTokens({ userId, role });
+    const newRefreshToken = generateTokens({ userId, role });
     await userModel.findByIdAndUpdate(user._id, {
       refreshToken: newRefreshToken,
     });
@@ -124,6 +131,13 @@ export const refreshTokenApiController = async (req, res) => {
     });
     res.status(200).json({
       message: "Tokens rotated successfully",
+      data: {
+        user: {
+          email: user.email,
+          name: user.name,
+          id: user._id,
+        },
+      },
       accessToken,
     });
   } catch (error) {

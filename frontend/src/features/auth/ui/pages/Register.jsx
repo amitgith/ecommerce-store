@@ -1,6 +1,7 @@
 import { useAuth } from "../../hooks/useAuth";
 const Register = () => {
-  const { register, handleSubmit, reset, errors, registerSubmit } = useAuth();
+  const { register, handleSubmit, reset, errors, registerSubmit, navigate } =
+    useAuth();
   return (
     <div className="flex flex-col gap-2 p-2">
       <h1 className="text-xl font-bold">Register Page</h1>
@@ -79,6 +80,7 @@ const Register = () => {
         <button className="bg-green-600 text-white rounded p-2 cursor-pointer">
           Create
         </button>
+        <p>Already have an account  </p>
       </form>
     </div>
   );
