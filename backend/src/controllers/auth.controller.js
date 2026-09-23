@@ -1,6 +1,6 @@
 import userModel from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { generateTokens } from "../utils/auth.utils.js";
+import { generateTokens, verifyRefreshToken } from "../utils/auth.utils.js";
 export const registerApiController = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -97,5 +97,39 @@ export const loginApiController = async (req, res) => {
   }
 };
 export const refreshTokenApiController = async (req, res) => {
-  
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    return res.status(401).json({
+      message: "Refresh token is required ",
+    });
+  }
+  try {
+    const decoded = verifyRefreshToken(refreshToken);
+    const { userId, role } = decoded;
+    const user = await userModel.findById(userId);
+    if (refreshToken !== user.refreshToken) {
+      await userModel.findByIdAndUpdate(user._id, {
+        refreshToken: null,
+      });
+      return res.status(401).json({
+        message: "Refresh Token mismatch",
+      });
+    }
+    const { accessToken, newRefreshToken } = generateTokens({ userId, role });
+    await userModel.findByIdAndUpdate(user._id, {
+      refreshToken: newRefreshToken,
+    });
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+    });
+    res.status(200).json({
+      message: "Tokens rotated successfully",
+      accessToken,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(401).json({
+      message: "Invalid or expired refresh token",
+    });
+  }
 };
