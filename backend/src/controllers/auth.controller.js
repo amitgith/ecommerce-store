@@ -133,3 +133,17 @@ export const refreshTokenApiController = async (req, res) => {
     });
   }
 };
+export const aboutMeApiController = async (req, res) => {
+  const { userId, role } = req.user;
+  const user = await userModel.findById(userId);
+  res.status(200).json({
+    message: "User data fetch successfully",
+    data: {
+      user: {
+        name: user.name,
+        email: user.email,
+        id: user._id,
+      },
+    },
+  });
+};

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  aboutMeApiController,
   loginApiController,
   refreshTokenApiController,
   registerApiController,
@@ -8,9 +9,11 @@ import {
   loginValidator,
   registerValidator,
 } from "../validators/auth.validator.js";
+import { authenticate } from "../middleware/auth.middleware.js";
 const router = Router();
 // Create a new user account
 router.post("/register", registerValidator, registerApiController);
 router.post("/login", loginValidator, loginApiController);
 router.post("/refresh-token", refreshTokenApiController);
+router.get("/me",authenticate, aboutMeApiController);
 export default router;
