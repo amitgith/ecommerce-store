@@ -104,32 +104,67 @@ export const loginApiController = async (req, res) => {
 };
 export const refreshTokenApiController = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
+
+  console.log("STEP 1 - Refresh Cookie:", refreshToken);
+
   if (!refreshToken) {
     return res.status(401).json({
-      message: "Refresh token is required ",
+      message: "Refresh token is required",
     });
   }
+
   try {
     const decoded = verifyRefreshToken(refreshToken);
+
+    console.log("STEP 2 - Decoded:", decoded);
+
     const { userId, role } = decoded;
+
     const user = await userModel.findById(userId);
-    if (refreshToken != user.refreshToken) {
+
+    console.log("STEP 3 - User:", user);
+
+    if (!user) {
+      return res.status(401).json({
+        message: "User not found",
+      });
+    }
+
+    console.log("STEP 4 - DB Refresh Token:", user.refreshToken);
+
+    if (refreshToken !== user.refreshToken) {
+      console.log("TOKEN MISMATCH");
+
       await userModel.findByIdAndUpdate(user._id, {
         refreshToken: null,
       });
+
       return res.status(401).json({
         message: "Refresh Token mismatch",
       });
     }
-    const accessToken = generateTokens({ userId, role });
-    const newRefreshToken = generateTokens({ userId, role });
+
+    console.log("STEP 5 - Token matched");
+    console.log("STEP 6 - Generating tokens");
+
+    const { accessToken, refreshToken: newRefreshToken } = generateTokens({
+      userId,
+      role,
+    });
+    console.log("STEP 7 - Tokens generated");
     await userModel.findByIdAndUpdate(user._id, {
       refreshToken: newRefreshToken,
     });
+        console.log("STEP 8 - DB updated");
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
     });
-    res.status(200).json({
+
+    console.log("STEP-9 - COOKIE updated");
+    
+
+
+    return res.status(200).json({
       message: "Tokens rotated successfully",
       data: {
         user: {
@@ -141,7 +176,8 @@ export const refreshTokenApiController = async (req, res) => {
       accessToken,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log("REFRESH ERROR:", error.message);
+
     return res.status(401).json({
       message: "Invalid or expired refresh token",
     });

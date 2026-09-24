@@ -5,15 +5,21 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
+    accessToken: null,
     isLoading: false,
   },
   reducers: {
+    setAccessToken: (state, action) => {
+      state.accessToken = action.payload;
+    },
     addUser: (state, action) => {
       state.user = action.payload;
       state.isLoading = false;
     },
     removeUser: (state) => {
-      ((state.user = null), (state.isLoading = false));
+      state.user = null;
+      state.accessToken = null;
+      state.isLoading = false;
     },
   },
   extraReducers: (builder) => {
@@ -22,7 +28,8 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.data.user;
+        state.accessToken = action.payload.accessToken;
         state.isLoading = false;
       })
       .addCase(registerUser.rejected, (state) => {
@@ -32,7 +39,8 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.data.user;
+        state.accessToken = action.payload.accessToken;
         state.isLoading = false;
       })
       .addCase(loginUser.rejected, (state) => {
@@ -40,5 +48,5 @@ const authSlice = createSlice({
       });
   },
 });
-const { addUser, removeUser } = authSlice.actions;
+export const { addUser, removeUser, setAccessToken } = authSlice.actions;
 export default authSlice.reducer;

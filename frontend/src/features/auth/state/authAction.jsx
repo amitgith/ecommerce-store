@@ -8,7 +8,7 @@ export const registerUser = createAsyncThunk(
       console.log(res.data);
       return res.data;
     } catch (error) {
-      return thunkApi.rejectWithValue(error);
+      return thunkApi.rejectWithValue(error.response?.data?.message || "Something went wrong");
     }
   },
 );
@@ -20,7 +20,7 @@ export const loginUser = createAsyncThunk(
       console.log(res);
       return res.data;
     } catch (error) {
-      return thunkApi.rejectWithValue(error);
+      return thunkApi.rejectWithValue(error.response?.data?.message || "Something went wrong");
     }
   },
 );
@@ -32,7 +32,7 @@ export const currentLoggedUser = createAsyncThunk(
       console.log(res.data);
       return res.data.data.user;
     } catch (error) {
-      return thunkApi.rejectWithValue(error);
+      return thunkApi.rejectWithValue(error.response?.data?.message || "Something went wrong");
     }
   },
 );
