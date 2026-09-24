@@ -2,9 +2,13 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { loginUser, registerUser } from "../state/authAction";
 import { useNavigate } from "react-router";
+import { useState } from "react";
 export const useAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -29,5 +33,9 @@ export const useAuth = () => {
     registerSubmit,
     loginSubmit,
     navigate,
+    showPassword,
+    setShowPassword,
+    showConfirmPassword,
+    setShowConfirmPassword,
   };
 };
