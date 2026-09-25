@@ -20,9 +20,18 @@ export const useAuth = () => {
     dispatch(registerUser(data));
     reset();
   };
-  const loginSubmit = (data) => {
+  const loginSubmit = async (data) => {
     console.log(data);
-    dispatch(loginUser(data));
+    const result = await dispatch(loginUser(data));
+    if (loginUser.fulfilled.match(result)) {
+      const user = result.payload.user;
+      if (user.role === "user") {
+        navigate("/home/user");
+      }
+      if (user.role === "seller") {
+        navigate("/home/seller");
+      }
+    }
     reset();
   };
   return {

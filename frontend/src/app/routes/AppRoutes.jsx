@@ -12,7 +12,10 @@ import PublicRoutes from "../../protectedRoutes/PublicRoutes";
 import AuthLayout from "../../layouts/AuthLayout";
 import ProtectedRoutes from "../../protectedRoutes/ProtectedRoutes";
 import DashboardLayout from "../../layouts/DashboardLayout";
-import Home from "../../features/Dashboard/ui/pages/Home";
+import { commonRoutes } from "../routes/commonRoutes";
+import RoleBaseRoute from "../../protectedRoutes/RoleBaseRoute";
+import { userRoutes } from "../routes/userRoutes";
+import { sellerRoutes } from "../routes/sellerRoutes";
 const AppRoutes = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -55,9 +58,17 @@ const AppRoutes = () => {
           path: "",
           element: <DashboardLayout />,
           children: [
+            ...commonRoutes,
+
             {
-              path: "",
-              element: <Home />,
+              path: "user",
+              element: <RoleBaseRoute allowedRoles={["user"]} />,
+              children: userRoutes,
+            },
+            {
+              path: "seller",
+              element: <RoleBaseRoute allowedRoles={["seller"]} />,
+              children: sellerRoutes,
             },
           ],
         },
