@@ -57,3 +57,16 @@ export const refreshAccessToken = createAsyncThunk(
     }
   },
 );
+export const logoutUser = createAsyncThunk(
+  "/logout",
+  async (credentials, thunkApi) => {
+    try {
+      const res = await axiosInstance.post("/logout", credentials);
+      return res.data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(
+        error.response?.data?.message || "Logout failed",
+      );
+    }
+  },
+);

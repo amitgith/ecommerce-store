@@ -4,6 +4,7 @@ import {
   refreshAccessToken,
   registerUser,
   currentLoggedUser,
+  logoutUser,
 } from "./authAction";
 
 const authSlice = createSlice({
@@ -70,6 +71,16 @@ const authSlice = createSlice({
       })
       .addCase(currentLoggedUser.rejected, (state) => {
         state.user = null;
+        state.isLoading = false;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+        state.isLoading = false;
+      })
+      .addCase(logoutUser.rejected, (state) => {
         state.isLoading = false;
       });
   },
