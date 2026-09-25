@@ -58,5 +58,10 @@ export const createProductValidator = [
     .trim()
     .isIn(["XS", "S", "M", "L", "XL", "XXL"])
     .withMessage("size can be one of these XS, S, M, L, XL, XXL."),
-    body("sizes.*.stock")
+  body("sizes.*.stock")
+    .exists()
+    .withMessage("stock must be present in every entry of the sizes array")
+    .bail()
+    .isInt({ min: 0 })
+    .withMessage("Stock must be a integer value"),
 ];
