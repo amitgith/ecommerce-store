@@ -41,3 +41,50 @@ export const listAllProducts = async (req, res) => {
     },
   });
 };
+export const getSingleProducts = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const product = await productModel.findById(productId);
+    res.status(200).json({
+      message: "Single Product fetched successfully",
+      data: product,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      message: "Internal Server error",
+    });
+  }
+};
+
+export const updateProducts = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const body = req.body;
+    const productUpdate = await productModel.findByIdAndUpdate(productId, body);
+    return res.status(200).json({
+      message: "Product updated successfully",
+      data: productUpdate,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const deleteProducts = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    await productModel.findByIdAndDelete(productId);
+    return res.status(200).json({
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};

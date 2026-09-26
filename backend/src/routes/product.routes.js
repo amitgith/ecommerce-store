@@ -4,7 +4,10 @@ import multer from "multer";
 import { createProductValidator } from "../validators/product.validator.js";
 import {
   createProduct,
+  deleteProducts,
+  getSingleProducts,
   listAllProducts,
+  updateProducts,
 } from "../controllers/product.controller.js";
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -15,6 +18,7 @@ const upload = multer({
 });
 
 const router = Router();
+// Create a new product
 router.post(
   "/",
   authenticate,
@@ -35,5 +39,13 @@ router.post(
   createProductValidator,
   createProduct,
 );
+// List all products (pagination optional)
 router.get("/", listAllProducts);
+// Get a single product by ID
+router.get("/:id", getSingleProducts);
+// Update a product
+router.put("/:id", authenticate, updateProducts);
+// Delete a product
+router.delete("/:id", authenticate, deleteProducts);
+
 export default router;
