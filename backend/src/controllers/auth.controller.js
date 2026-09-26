@@ -23,18 +23,6 @@ export const registerApiController = async (req, res) => {
       email,
       passwordHash: await bcrypt.hash(password, 10),
     });
-    // const userResponse = user.toObject();
-    // delete userResponse.passwordHash;
-    const { accessToken, refreshToken } = generateTokens({
-      userId: user._id,
-      role: user.role,
-    });
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-    });
-    await userModel.findByIdAndUpdate(user._id, {
-      refreshToken,
-    });
     res.status(201).json({
       message: "user registered successfully",
       data: {
@@ -44,7 +32,6 @@ export const registerApiController = async (req, res) => {
           id: user._id,
         },
       },
-      accessToken,
     });
   } catch (error) {
     console.log(error.message);
@@ -72,20 +59,17 @@ export const loginApiController = async (req, res) => {
     }
     const { accessToken, refreshToken } = generateTokens({
       userId: user._id,
-      role: user.role,
     });
 
-    await userModel.findOneAndUpdate(
-      { email },
-      {
-        refreshToken,
-      },
-    );
+    await userModel.findByIdAndUpdate(user._id, {
+      refreshToken,
+    });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
     });
-    res.status(200).json({
-      user: "User loggedIn successfully",
+    return res.status(200).json({
+      user: "User logged in  successfully",
       data: {
         user: {
           id: user._id,
@@ -129,13 +113,13 @@ export const refreshTokenApiController = async (req, res) => {
     }
     const { accessToken, refreshToken: newRefreshToken } = generateTokens({
       userId,
-      role,
     });
     await userModel.findByIdAndUpdate(user._id, {
       refreshToken: newRefreshToken,
     });
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
     });
     return res.status(200).json({
       message: "Tokens rotated successfully",
@@ -176,7 +160,7 @@ export const logoutApiController = async (req, res) => {
   }
 };
 export const aboutMeApiController = async (req, res) => {
-  const { userId, role } = req.user;
+  const { userId } = req.user;
   const user = await userModel.findById(userId);
   res.status(200).json({
     message: "User data fetch successfully",

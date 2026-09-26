@@ -13,30 +13,11 @@ const productSchema = new mongoose.Schema({
     maxLength: 500,
   },
   images: {
-    type: [
-      {
-        type: String,
-      },
-    ],
-    validate: {
-      validator: (images) => images.length <= 5,
-      message: "A product can have at most 5 images",
-    },
+    type: String,
+    required: true,
   },
   price: {
-    amount: {
-      type: Number,
-      required: true,
-    },
-    currency: {
-      type: String,
-      enum: ["INR", "USD"],
-      default: "INR",
-    },
-  },
-  seller: {
-    type: mongoose.Types.ObjectId,
-    ref: "users",
+    type: Number,
     required: true,
   },
 });

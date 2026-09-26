@@ -2,34 +2,31 @@ import productModel from "../models/product.model.js";
 import { uploadFile } from "../services/storage.service.js";
 
 export const createProduct = async (req, res) => {
-  console.log(req.body);
-  console.log(req.files);
-  const filesUrls = [];
-  for (let i = 0; i < req.files.length; i++) {
+  try {
+    console.log(req.body);
+    console.log(req.file);
     const response = await uploadFile({
-      buffer: req.files[i].buffer,
-      fileName: req.files[i].originalname,
+      buffer: req.file.buffer,
+      fileName: req.file.originalname,
     });
-    filesUrls.push(response.url);
+    const product = await productModel.create({
+      title: req.body.title,
+      description: req.body.description,
+      price: req.body.price,
+      images: response.url,
+    });
+    res.status(201).json({
+      message: "Product created successfully",
+      data: {
+        product,
+      },
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      message: "Internal Server error",
+    });
   }
-  console.log(filesUrls);
-  const product = await productModel.create({
-    title: req.body.title,
-    description: req.body.description,
-    price: {
-      amount: req.body.price.amount,
-      currency: req.body.price.currency,
-    },
-    sizes: req.body.sizes,
-    images: filesUrls,
-    seller: req.user.userId,
-  });
-  res.status(201).json({
-    message: "Product created successfully",
-    data: {
-      product,
-    },
-  });
 };
 
 export const listAllProducts = async (req, res) => {

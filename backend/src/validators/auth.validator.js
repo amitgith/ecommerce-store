@@ -12,7 +12,7 @@ export const registerValidator = [
     .withMessage("Name length must be between 3 to 20 characters"),
   body("email")
     .exists()
-    .withMessage("Emai is required")
+    .withMessage("Email is required")
     .bail()
     .trim()
     .isEmail()
@@ -26,7 +26,7 @@ export const registerValidator = [
     .bail()
     .trim()
     .isLength({ min: 8 })
-    .withMessage("Password must be a miniumum 8 characters long"),
+    .withMessage("Password must be a miniumum of 8 characters long"),
   body("confirmPassword")
     .exists()
     .withMessage("Confirm Password is required")

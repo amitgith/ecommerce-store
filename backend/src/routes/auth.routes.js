@@ -16,6 +16,6 @@ const router = Router();
 router.post("/register", registerValidator, registerApiController);
 router.post("/login", loginValidator, loginApiController);
 router.post("/refresh-token", refreshTokenApiController);
-router.post("/logout", logoutApiController);
-router.get("/me",authenticate, aboutMeApiController);
+router.post("/logout", authenticate, logoutApiController);
+router.get("/me", authenticate, aboutMeApiController);
 export default router;
