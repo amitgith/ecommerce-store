@@ -67,7 +67,7 @@ export const createProductValidator = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.stauts(400).json({
+      return res.status(400).json({
         message: "Invalid Request",
         errors: errors.array(),
       });

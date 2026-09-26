@@ -1,4 +1,5 @@
 import productModel from "../models/product.model.js";
+import { uploadFile } from "../services/storage.service.js";
 
 export const createProduct = async (req, res) => {
   console.log(req.body);
@@ -27,6 +28,16 @@ export const createProduct = async (req, res) => {
     message: "Product created successfully",
     data: {
       product,
+    },
+  });
+};
+
+export const listAllProducts = async (req, res) => {
+  const products = await productModel.find();
+  res.status(200).json({
+    message: "Products data fetched successfully",
+    data: {
+      products,
     },
   });
 };
