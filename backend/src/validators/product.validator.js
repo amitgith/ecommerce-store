@@ -64,4 +64,14 @@ export const createProductValidator = [
     .bail()
     .isInt({ min: 0 })
     .withMessage("Stock must be a integer value"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.stauts(400).json({
+        message: "Invalid Request",
+        errors: errors.array(),
+      });
+    }
+    next();
+  },
 ];
