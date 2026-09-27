@@ -33,7 +33,9 @@ const productSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(deleteProducts.fulfilled, (state, action) => {
-        state.products = null;
+        state.products = state.products.filter(
+          (product) => product._id !== action.meta.arg,
+        );
         state.isLoading = false;
       })
       .addCase(deleteProducts.rejected, (state) => {

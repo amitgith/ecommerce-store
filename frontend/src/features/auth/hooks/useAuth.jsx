@@ -21,7 +21,6 @@ export const useAuth = () => {
     reset();
   };
   const loginSubmit = (data) => {
-    console.log(data);
     dispatch(loginUser(data));
     reset();
   };

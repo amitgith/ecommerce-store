@@ -30,7 +30,14 @@ export const currentLoggedUser = createAsyncThunk(
   "/auth/me",
   async (_, thunkApi) => {
     try {
-      const res = await axiosInstance.get("/auth/me");
+      const accessToken = thunkApi.getState().auth.accessToken;
+
+      const res = await axiosInstance.get("/auth/me", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
       return res.data.data.user;
     } catch (error) {
       return thunkApi.rejectWithValue(
@@ -54,9 +61,20 @@ export const refreshAccessToken = createAsyncThunk(
 );
 export const logoutUser = createAsyncThunk(
   "/auth/logout",
-  async (credentials, thunkApi) => {
+  async (_, thunkApi) => {
     try {
-      const res = await axiosInstance.post("/auth/logout", credentials);
+      const accessToken = thunkApi.getState().auth.accessToken;
+
+      const res = await axiosInstance.post(
+        "/auth/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
       return res.data;
     } catch (error) {
       return thunkApi.rejectWithValue(

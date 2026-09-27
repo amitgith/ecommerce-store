@@ -28,7 +28,7 @@ const ProductCard = () => {
               Edit
             </button>
             <button
-              onClick={() => dispatch(deleteProducts())}
+              onClick={() => dispatch(deleteProducts(product._id))}
               className="bg-red-600 rounded text-white p-2 cursor-pointer"
             >
               Delete

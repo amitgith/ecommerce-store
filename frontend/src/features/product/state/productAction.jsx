@@ -6,7 +6,6 @@ export const getAllProducts = createAsyncThunk(
   async (credentials, thunkApi) => {
     try {
       const res = await axiosInstance.get("/products/allProducts", credentials);
-      console.log(res.data.data.products);
       return res.data;
     } catch (error) {
       return thunkApi.rejectWithValue(error);
@@ -14,13 +13,29 @@ export const getAllProducts = createAsyncThunk(
   },
 );
 export const deleteProducts = createAsyncThunk(
-  "/products/:id",
+  "/products/delete",
   async (id, thunkApi) => {
     try {
-      const res = await axiosInstance.delete(`/products/${id}`);
+      console.log("DELETE ID:", id);
+
+      const token = thunkApi.getState().auth.accessToken;
+      console.log("TOKEN:", token);
+
+      const res = await axiosInstance.delete(`/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("DELETE RESPONSE:", res.data);
+
       return res.data;
     } catch (error) {
-      return thunkApi.rejectWithValue(error);
+      console.log("DELETE ERROR:", error.response?.data);
+
+      return thunkApi.rejectWithValue(
+        error.response?.data?.message || "Delete failed",
+      );
     }
   },
 );

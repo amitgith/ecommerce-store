@@ -18,7 +18,6 @@ const AppRoutes = () => {
   useEffect(() => {
     const restoreUser = async () => {
       const result = await dispatch(refreshAccessToken());
-
       if (refreshAccessToken.fulfilled.match(result)) {
         dispatch(currentLoggedUser());
       }
