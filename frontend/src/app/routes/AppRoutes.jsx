@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router";
 import Login from "../../features/auth/ui/pages/Login";
@@ -12,10 +12,7 @@ import PublicRoutes from "../../protectedRoutes/PublicRoutes";
 import AuthLayout from "../../layouts/AuthLayout";
 import ProtectedRoutes from "../../protectedRoutes/ProtectedRoutes";
 import DashboardLayout from "../../layouts/DashboardLayout";
-import { commonRoutes } from "../routes/commonRoutes";
-import RoleBaseRoute from "../../protectedRoutes/RoleBaseRoute";
-import { userRoutes } from "../routes/userRoutes";
-import { sellerRoutes } from "../routes/sellerRoutes";
+import Home from "../../features/Dashboard/ui/pages/Home";
 const AppRoutes = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -58,17 +55,9 @@ const AppRoutes = () => {
           path: "",
           element: <DashboardLayout />,
           children: [
-            ...commonRoutes,
-
             {
-              path: "user",
-              element: <RoleBaseRoute allowedRoles={["user"]} />,
-              children: userRoutes,
-            },
-            {
-              path: "seller",
-              element: <RoleBaseRoute allowedRoles={["seller"]} />,
-              children: sellerRoutes,
+              path: "",
+              element: <Home />,
             },
           ],
         },

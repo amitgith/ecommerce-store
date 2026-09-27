@@ -13,6 +13,7 @@ const authSlice = createSlice({
     user: null,
     accessToken: null,
     isLoading: false,
+    error: null,
   },
   reducers: {
     setAccessToken: (state, action) => {
@@ -59,8 +60,10 @@ const authSlice = createSlice({
         state.accessToken = action.payload;
         state.isLoading = false;
       })
-      .addCase(refreshAccessToken.rejected, (state) => {
+      .addCase(refreshAccessToken.rejected, (state, action) => {
         state.isLoading = false;
+        state.user = null;
+        state.error = action.payload;
       })
       .addCase(currentLoggedUser.pending, (state) => {
         state.isLoading = true;

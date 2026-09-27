@@ -1,10 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../../config/axiosInstance";
 export const registerUser = createAsyncThunk(
-  "/register",
+  "/auth/register",
   async (credentials, thunkApi) => {
     try {
-      const res = await axiosInstance.post("/register", credentials);
+      const res = await axiosInstance.post("/auth/register", credentials);
       return res.data;
     } catch (error) {
       return thunkApi.rejectWithValue(
@@ -14,10 +14,10 @@ export const registerUser = createAsyncThunk(
   },
 );
 export const loginUser = createAsyncThunk(
-  "/login",
+  "/auth/login",
   async (credentials, thunkApi) => {
     try {
-      const res = await axiosInstance.post("/login", credentials);
+      const res = await axiosInstance.post("/auth/login", credentials);
       return res.data;
     } catch (error) {
       return thunkApi.rejectWithValue(
@@ -27,15 +27,10 @@ export const loginUser = createAsyncThunk(
   },
 );
 export const currentLoggedUser = createAsyncThunk(
-  "/me",
+  "/auth/me",
   async (_, thunkApi) => {
     try {
-      const accessToken = thunkApi.getState().auth.accessToken;
-      const res = await axiosInstance.get("/me", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const res = await axiosInstance.get("/auth/me");
       return res.data.data.user;
     } catch (error) {
       return thunkApi.rejectWithValue(
@@ -45,10 +40,10 @@ export const currentLoggedUser = createAsyncThunk(
   },
 );
 export const refreshAccessToken = createAsyncThunk(
-  "/refresh-token",
+  "/auth/refresh-token",
   async (_, thunkApi) => {
     try {
-      const res = await axiosInstance.post("/refresh-token");
+      const res = await axiosInstance.post("/auth/refresh-token");
       return res.data.accessToken;
     } catch (error) {
       return thunkApi.rejectWithValue(
@@ -58,10 +53,10 @@ export const refreshAccessToken = createAsyncThunk(
   },
 );
 export const logoutUser = createAsyncThunk(
-  "/logout",
+  "/auth/logout",
   async (credentials, thunkApi) => {
     try {
-      const res = await axiosInstance.post("/logout", credentials);
+      const res = await axiosInstance.post("/auth/logout", credentials);
       return res.data;
     } catch (error) {
       return thunkApi.rejectWithValue(

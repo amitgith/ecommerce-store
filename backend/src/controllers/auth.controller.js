@@ -95,7 +95,7 @@ export const refreshTokenApiController = async (req, res) => {
   }
   try {
     const decoded = verifyRefreshToken(refreshToken);
-    const { userId, role } = decoded;
+    const { userId } = decoded;
     const user = await userModel.findById(userId);
     if (!user) {
       return res.status(401).json({
@@ -119,7 +119,9 @@ export const refreshTokenApiController = async (req, res) => {
     });
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
+      sameSite: "lax",
+      path: "/",
     });
     return res.status(200).json({
       message: "Tokens rotated successfully",
