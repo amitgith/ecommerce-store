@@ -12,8 +12,7 @@ import {
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    files: 1,
-    fileSize: 1 * 1024 * 1024, //1MB
+    fileSize: 5 * 1024 * 1024, //5MB
   },
 });
 
@@ -35,7 +34,7 @@ router.get("/allProducts", listAllProducts);
 // Get a single product by ID
 router.get("/:id", getSingleProducts);
 // Update a product
-router.put("/:id", authenticate, updateProducts);
+router.put("/:id", authenticate, upload.single("image"), updateProducts);
 // Delete a product
 router.delete("/:id", authenticate, deleteProducts);
 

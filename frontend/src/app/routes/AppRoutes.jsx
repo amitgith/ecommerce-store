@@ -13,6 +13,8 @@ import AuthLayout from "../../layouts/AuthLayout";
 import ProtectedRoutes from "../../protectedRoutes/ProtectedRoutes";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import Home from "../../features/Dashboard/ui/pages/Home";
+import CreateProduct from "../../features/product/ui/pages/CreateProduct";
+import EditProduct from "../../features/product/ui/pages/EditProduct";
 const AppRoutes = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -57,6 +59,14 @@ const AppRoutes = () => {
             {
               path: "",
               element: <Home />,
+            },
+            {
+              path: "products/create",
+              element: <CreateProduct />,
+            },
+            {
+              path: "products/edit/:id",
+              element: <EditProduct />,
             },
           ],
         },

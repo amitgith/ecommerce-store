@@ -3,8 +3,6 @@ import { uploadFile } from "../services/storage.service.js";
 
 export const createProduct = async (req, res) => {
   try {
-    console.log(req.body);
-    console.log(req.file);
     const response = await uploadFile({
       buffer: req.file.buffer,
       fileName: req.file.originalname,
@@ -13,7 +11,7 @@ export const createProduct = async (req, res) => {
       title: req.body.title,
       description: req.body.description,
       price: req.body.price,
-      images: response.url,
+      image: response.url,
     });
     res.status(201).json({
       message: "Product created successfully",
@@ -57,14 +55,35 @@ export const getSingleProducts = async (req, res) => {
 export const updateProducts = async (req, res) => {
   try {
     const productId = req.params.id;
-    const body = req.body;
-    const productUpdate = await productModel.findByIdAndUpdate(productId, body);
+
+    const updateData = {
+      title: req.body.title,
+      description: req.body.description,
+      price: req.body.price,
+    };
+
+    if (req.file) {
+      const response = await uploadFile({
+        buffer: req.file.buffer,
+        fileName: req.file.originalname,
+      });
+
+      updateData.image = response.url;
+    }
+
+    const productUpdate = await productModel.findByIdAndUpdate(
+      productId,
+      updateData,
+      { returnDocument: "after" },
+    );
+
     return res.status(200).json({
       message: "Product updated successfully",
       data: productUpdate,
     });
   } catch (error) {
     console.log(error.message);
+
     return res.status(500).json({
       message: "Internal server error",
     });
