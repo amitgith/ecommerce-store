@@ -3,11 +3,11 @@ import { axiosInstance } from "../../../config/axiosInstance";
 
 export const createProducts = createAsyncThunk(
   "/products/create",
-  async (credentials, thunkApi) => {
+  async (data, thunkApi) => {
     try {
       const token = thunkApi.getState().auth.accessToken;
 
-      const res = await axiosInstance.post("/products/create", credentials, {
+      const res = await axiosInstance.post("/products/create", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -15,6 +15,8 @@ export const createProducts = createAsyncThunk(
 
       return res.data;
     } catch (error) {
+      console.log("CREATE PRODUCT ERROR:", error.response?.data);
+
       return thunkApi.rejectWithValue(
         error.response?.data?.message || "Product creation failed",
       );

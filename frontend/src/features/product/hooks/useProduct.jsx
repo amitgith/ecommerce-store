@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
-
+import toast from "react-hot-toast";
 import { createProducts, updateProducts } from "../state/productAction";
 
 export const useProduct = (product) => {
@@ -39,6 +39,7 @@ export const useProduct = (product) => {
       );
 
       if (updateProducts.fulfilled.match(result)) {
+        toast.success("Product updated successfully!");
         reset();
         navigate("/home");
       }
@@ -46,6 +47,7 @@ export const useProduct = (product) => {
       result = await dispatch(createProducts(formData));
 
       if (createProducts.fulfilled.match(result)) {
+        toast.success("Product created successfully!");
         reset();
         navigate("/home");
       }

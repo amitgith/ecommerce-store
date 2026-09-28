@@ -4,13 +4,18 @@ import { logoutUser } from "../../../auth/state/authAction";
 import ProductCard from "../../../product/ui/components/ProductCard";
 import { useNavigate } from "react-router";
 import { LogOut, Plus, ShoppingBag } from "lucide-react";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogoutUser = () => {
-    dispatch(logoutUser());
+  const handleLogoutUser = async () => {
+    const result = await dispatch(logoutUser());
+
+    if (logoutUser.fulfilled.match(result)) {
+      toast.success("Logged out successfully!");
+    }
   };
 
   return (

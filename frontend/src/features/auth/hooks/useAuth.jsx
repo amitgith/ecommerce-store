@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { loginUser, registerUser } from "../state/authAction";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import toast from "react-hot-toast";
 export const useAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -18,10 +19,12 @@ export const useAuth = () => {
   const registerSubmit = (data) => {
     console.log(data);
     dispatch(registerUser(data));
+    toast.success("Registration successful!");
     reset();
   };
   const loginSubmit = (data) => {
     dispatch(loginUser(data));
+    toast.success("Login successful!");
     reset();
   };
   return {

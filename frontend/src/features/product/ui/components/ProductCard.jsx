@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteProducts, getAllProducts } from "../../state/productAction";
 import { useNavigate } from "react-router";
 import { Pencil, Trash2, PackageOpen } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ProductCard = () => {
   const navigate = useNavigate();
@@ -13,6 +14,14 @@ const ProductCard = () => {
   useEffect(() => {
     dispatch(getAllProducts());
   }, [dispatch]);
+
+  const handleDelete = async (id) => {
+    const result = await dispatch(deleteProducts(id));
+
+    if (deleteProducts.fulfilled.match(result)) {
+      toast.success("Product deleted successfully!");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -100,15 +109,15 @@ const ProductCard = () => {
                       onClick={() =>
                         navigate(`/home/products/edit/${product._id}`)
                       }
-                      className="flex flex-1 items-center cursor-pointer justify-center gap-2 rounded-lg bg-indigo-50 px-3 py-2.5 text-sm font-medium text-indigo-600 transition hover:bg-indigo-600 hover:text-white"
+                      className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-indigo-50 px-3 py-2.5 text-sm font-medium text-indigo-600 transition hover:bg-indigo-600 hover:text-white"
                     >
                       <Pencil size={16} />
                       Edit
                     </button>
 
                     <button
-                      onClick={() => dispatch(deleteProducts(product._id))}
-                      className="flex flex-1 items-center justify-center cursor-pointer gap-2 rounded-lg bg-red-50 px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-600 hover:text-white"
+                      onClick={() => handleDelete(product._id)}
+                      className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-red-50 px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-600 hover:text-white"
                     >
                       <Trash2 size={16} />
                       Delete
