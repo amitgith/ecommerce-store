@@ -1,0 +1,23 @@
+{
+  "name": "ecommerce-store",
+  "version": "1.0.0",
+  "description": "echo \"# ecommerce-store\" >> README.md\r git init\r git add README.md\r git commit -m \"first commit\"\r git branch -M main\r git remote add origin https://github.com/amitgith/ecommerce-store.git\r git push -u origin main",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "build": "npm install && cd backend && npm install && cd ../frontend && npm install --include=dev && npm run build",
+    "start": "cd backend && node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitgith/ecommerce-store.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/amitgith/ecommerce-store/issues"
+  },
+  "homepage": "https://github.com/amitgith/ecommerce-store#readme"
+}
