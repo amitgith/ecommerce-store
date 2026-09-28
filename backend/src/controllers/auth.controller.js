@@ -66,7 +66,9 @@ export const loginApiController = async (req, res) => {
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
+      sameSite: "lax",
+      path: "/",
     });
     return res.status(200).json({
       user: "User logged in  successfully",
